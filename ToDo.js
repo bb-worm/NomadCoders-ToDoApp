@@ -16,20 +16,52 @@ export default class ToDo extends Component {
   };
 
   render() {
-    const { isCompleted } = this.state;
+    const { isCompleted, isEditing } = this.state;
     // const isCommpleted = this.state.isCompleted 와 동일
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this._toggleComplete}>
-          <View
-            // style 여러개 넣을 때는 대괄호로 감쌈
+        <View style={styles.column}>
+          <TouchableOpacity onPress={this._toggleComplete}>
+            <View
+              // style 여러개 넣을 때는 배열 사용
+              style={[
+                styles.circle,
+                isCompleted ? styles.completedCircle : styles.uncompletedCircle
+              ]}
+            />
+          </TouchableOpacity>
+          <Text
             style={[
-              styles.circle,
-              isCompleted ? styles.completedCircle : styles.uncompletedCircle
+              styles.text,
+              isCompleted ? styles.completedText : styles.uncompletedText
             ]}
-          />
-        </TouchableOpacity>
-        <Text style={styles.text}>This is Test To do</Text>
+          >
+            This is Test To do
+          </Text>
+        </View>
+
+        {isEditing ? (
+          <View style={styles.actions}>
+            <TouchableOpacity onPressOut={this._finishEditing}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>✅</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.actions}>
+            <TouchableOpacity onPressOut={this._startEditing}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>✏️</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>❌</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
@@ -56,6 +88,18 @@ export default class ToDo extends Component {
     //   isCompleted: !this.state.isCompleted
     // });
   };
+
+  _startEditing = () => {
+    this.setState({
+      isEditing: true
+    });
+  };
+
+  _finishEditing = () => {
+    this.setState({
+      isEditing: false
+    });
+  };
 }
 
 const styles = StyleSheet.create({
@@ -64,7 +108,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#bbb",
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   circle: {
     width: 30,
@@ -73,11 +118,33 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     marginRight: 20
   },
-  completedCircle: { borderColor: "#bbb" }, // 완료한 경우
-  uncompletedCircle: { borderColor: "red" }, // 완료하지 않은 경우
+  completedCircle: { borderColor: "#bbb" }, // 완료한 경우 circle
+  uncompletedCircle: { borderColor: "red" }, // 완료하지 않은 경우 circle
   text: {
     fontWeight: "600",
     fontSize: 20,
     marginVertical: 20
+  },
+  // 완료한 경우 text
+  completedText: {
+    color: "#bbb",
+    textDecorationLine: "line-through"
+  },
+  // 완료하지 않은 경우 text
+  uncompletedText: {
+    color: "#353839"
+  },
+  column: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: width / 2,
+    justifyContent: "space-between"
+  },
+  actions: {
+    flexDirection: "row"
+  },
+  actionContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10
   }
 });
