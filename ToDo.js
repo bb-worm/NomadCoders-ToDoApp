@@ -50,6 +50,11 @@ export default class ToDo extends Component {
     // this.setState({
     //   isCompleted: !isCompleted
     // });
+
+    // 또는
+    // this.setState({
+    //   isCompleted: !this.state.isCompleted
+    // });
   };
 }
 
