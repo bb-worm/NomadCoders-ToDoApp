@@ -33,7 +33,7 @@ export default class App extends React.Component {
             returnKeyType={"done"} // 키패드에서 return 키를 '다음'으로 설정할지 '완료'로 설정할지 등
             autoCorrect={false} // 자동완성 끄기
           />
-          <ScrollView>
+          <ScrollView contentContainerStyle={styles.toDos}>
             <ToDo />
           </ScrollView>
         </View>
@@ -48,22 +48,22 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  // 뒷배경
   container: {
-    // 뒷배경
     flex: 1,
     backgroundColor: "#f23657",
     alignItems: "center"
   },
+  // title 박스
   title: {
-    // title 박스
     color: "white",
     fontSize: 30,
     marginTop: 40,
     marginBottom: 30,
     fontWeight: "100"
   },
+  // card 박스
   card: {
-    // card 박스
     backgroundColor: "white",
     flex: 1,
     width: width - 25,
@@ -85,11 +85,15 @@ const styles = StyleSheet.create({
       }
     })
   },
+  // input 박스
   input: {
-    // input 박스
     padding: 20,
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
     fontSize: 25
+  },
+  // to do list
+  toDos: {
+    alignItems: "center"
   }
 });
