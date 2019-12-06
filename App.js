@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AppLoading } from "expo";
 import ToDo from "./ToDo";
+import uuidv1 from "uuid/v1"; // npm install uuid --save
 
 const { height, width } = Dimensions.get("window");
 
@@ -42,6 +43,7 @@ export default class App extends React.Component {
             placeholderTextColor={"#999"}
             returnKeyType={"done"} // 키패드에서 return 키를 '다음'으로 설정할지 '완료'로 설정할지 등
             autoCorrect={false} // 자동완성 끄기
+            onSubmitEditing={this._addToDo} // 키패드에서 return 키를 눌렀을 때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
             {/* 스타일 넘기기 */}
@@ -57,7 +59,41 @@ export default class App extends React.Component {
     });
   };
 
-  _loadToDos = () => {};
+  _loadToDos = () => {
+    this.setState({
+      loadedToDos: true
+    });
+  };
+
+  _addToDo = () => {
+    const { newToDo } = this.state;
+    if (newToDo !== "") {
+      this.setState(prevState => {
+        const ID = uuidv1();
+
+        // 새로운 object 생성
+        const newToDoObject = {
+          ID: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
+          }
+        };
+
+        // 이전 state + 새로운 object
+        const newState = {
+          ...prevState,
+          newToDo: "", // 입력 창 비우기
+          toDos: {
+            ...prevState.toDos, // 이전 to dos
+            ...newToDoObject // 새로운 to do
+          }
+        };
+        return { ...newState };
+      });
+    }
+  };
 }
 
 const styles = StyleSheet.create({
