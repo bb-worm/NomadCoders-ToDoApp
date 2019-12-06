@@ -34,7 +34,8 @@ export default class App extends React.Component {
             autoCorrect={false} // 자동완성 끄기
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <ToDo />
+            {/* 스타일 넘기기 */}
+            <ToDo text={"This is Test"} />
           </ScrollView>
         </View>
       </View>
