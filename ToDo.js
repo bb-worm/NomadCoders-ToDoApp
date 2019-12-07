@@ -22,7 +22,9 @@ export default class ToDo extends Component {
     text: PropTypes.string.isRequired,
     isCompleted: PropTypes.bool.isRequired,
     deleteToDo: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    uncompleteToDo: PropTypes.func.isRequired,
+    completeToDo: PropTypes.func.isRequired
   };
 
   state = {
@@ -32,9 +34,10 @@ export default class ToDo extends Component {
   };
 
   render() {
-    const { isCompleted, isEditing, toDoValue } = this.state;
-    const { text, id, deleteToDo } = this.props;
-    // const isCommpleted = this.state.isCompleted 와 동일
+    // const isEditing = this.state.isEditing 와 동일
+    const { isEditing, toDoValue } = this.state;
+    const { isCompleted, text, id, deleteToDo } = this.props;
+
     return (
       <View style={styles.container}>
         <View style={styles.column}>
@@ -99,13 +102,20 @@ export default class ToDo extends Component {
   }
 
   _toggleComplete = () => {
+    const { id, isCompleted, completeToDo, uncompleteToDo } = this.props;
+    if (isCompleted) {
+      uncompleteToDo(id);
+    } else {
+      completeToDo(id);
+    }
+
     // setState는 첫번째 인자로 updater를 가짐
     // updater는 (state, props)을 인자로 가져서 state를 변화시킬 수 있음
-    this.setState(prevState => {
-      return {
-        isCompleted: !prevState.isCompleted
-      };
-    });
+    // this.setState(prevState => {
+    //   return {
+    //     isCompleted: !prevState.isCompleted
+    //   };
+    // });
 
     // 아래처럼 쓸 수도 있지만,
     // render() 안에서 isCompleted 변수가 다른 용도로도 사용되므로 위와 같이 사용하는게 나을 듯 함.

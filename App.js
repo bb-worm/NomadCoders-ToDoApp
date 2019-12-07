@@ -50,7 +50,13 @@ export default class App extends React.Component {
           <ScrollView contentContainerStyle={styles.toDos}>
             {/* toDos가 배열이었다면, toDos.map(toDo => <ToDo />) 식으로 넘김 */}
             {Object.values(toDos).map(toDo => (
-              <ToDo key={toDo.id} {...toDo} deleteToDo={this._deleteToDo} />
+              <ToDo
+                key={toDo.id}
+                {...toDo}
+                deleteToDo={this._deleteToDo}
+                uncompleteToDo={this._uncompleteToDo}
+                completeToDo={this._completeToDo}
+              />
             ))}
           </ScrollView>
         </View>
@@ -109,6 +115,38 @@ export default class App extends React.Component {
       const newState = {
         ...prevState,
         ...toDos
+      };
+      return { ...newState };
+    });
+  };
+
+  // 나머지 state는 그대로 가져가고, isCompleted만 덮어씀
+  _uncompleteToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: false
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
+  _completeToDo = id => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: true
+          }
+        }
       };
       return { ...newState };
     });
