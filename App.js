@@ -74,10 +74,17 @@ export default class App extends React.Component {
     });
   };
 
-  _loadToDos = () => {
-    this.setState({
-      loadedToDos: true
-    });
+  _loadToDos = async () => {
+    try {
+      const toDos = await AsyncStorage.getItem("toDos");
+      const parsedToDos = JSON.parse(toDos);
+      this.setState({
+        loadedToDos: true,
+        toDos: parsedToDos
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   _addToDo = () => {
@@ -139,6 +146,7 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState.toDos);
       return { ...newState };
     });
   };
@@ -154,6 +162,7 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState.toDos);
       return { ...newState };
     });
   };
@@ -163,7 +172,7 @@ export default class App extends React.Component {
       const newState = {
         ...prevState,
         toDos: {
-          ...prevState.toDo,
+          ...prevState.toDos,
           [id]: {
             ...prevState.toDos[id],
             text: text
@@ -177,6 +186,7 @@ export default class App extends React.Component {
 
   _saveToDos = newToDos => {
     // AsyncStorage는 object를 저장하지 않기 때문에 string으로 바꿔줘야 함
+    // setItem(key, value)
     const saveToDos = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
   };
 }
