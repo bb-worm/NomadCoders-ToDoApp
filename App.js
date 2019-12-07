@@ -18,7 +18,8 @@ const { height, width } = Dimensions.get("window");
 export default class App extends React.Component {
   state = {
     newToDo: "",
-    loadedToDos: false
+    loadedToDos: false,
+    toDos: {}
   };
 
   componentDidMount = () => {
@@ -26,7 +27,8 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { newToDo, loadedToDos } = this.state;
+    const { newToDo, loadedToDos, toDos } = this.state;
+    console.log(toDos.id);
     if (!loadedToDos) {
       return <AppLoading />;
     }
@@ -46,8 +48,10 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo} // 키패드에서 return 키를 눌렀을 때
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {/* 스타일 넘기기 */}
-            <ToDo text={"This is Test"} />
+            {/* toDos가 배열이었다면, toDos.map(toDo => <ToDo />) 식으로 넘김 */}
+            {Object.values(toDos).map(toDo => (
+              <ToDo key={toDo.id} {...toDo} deleteToDo={this._deleteToDo} />
+            ))}
           </ScrollView>
         </View>
       </View>
@@ -73,7 +77,9 @@ export default class App extends React.Component {
 
         // 새로운 object 생성
         const newToDoObject = {
-          ID: {
+          // ID를 대괄호로 감싸야 변수 값으로 쓸 수 있음
+          // ES6에서 추가된 Computed(Dynamic) Property Name
+          [ID]: {
             id: ID,
             isCompleted: false,
             text: newToDo,
@@ -93,6 +99,19 @@ export default class App extends React.Component {
         return { ...newState };
       });
     }
+  };
+
+  _deleteToDo = id => {
+    this.setState(prevState => {
+      const toDos = prevState.toDo;
+      console.log(id);
+      delete toDos[id];
+      const newState = {
+        ...prevState,
+        ...toDos
+      };
+      return { ...newState };
+    });
   };
 }
 
