@@ -7,7 +7,8 @@ import {
   TextInput,
   Dimensions,
   Platform,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from "react-native";
 import { AppLoading } from "expo";
 import ToDo from "./ToDo";
@@ -106,6 +107,7 @@ export default class App extends React.Component {
             ...newToDoObject // 새로운 to do
           }
         };
+        this._saveToDos(newState.toDos);
         return { ...newState };
       });
     }
@@ -114,12 +116,12 @@ export default class App extends React.Component {
   _deleteToDo = id => {
     this.setState(prevState => {
       const toDos = prevState.toDos;
-      console.log(id);
       delete toDos[id];
       const newState = {
         ...prevState,
         ...toDos
       };
+      this._saveToDos(newState.toDos);
       return { ...newState };
     });
   };
@@ -168,8 +170,14 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState.toDos);
       return { ...newState };
     });
+  };
+
+  _saveToDos = newToDos => {
+    // AsyncStorage는 object를 저장하지 않기 때문에 string으로 바꿔줘야 함
+    const saveToDos = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
   };
 }
 
