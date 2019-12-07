@@ -28,7 +28,6 @@ export default class App extends React.Component {
 
   render() {
     const { newToDo, loadedToDos, toDos } = this.state;
-    console.log(toDos.id);
     if (!loadedToDos) {
       return <AppLoading />;
     }
@@ -49,15 +48,19 @@ export default class App extends React.Component {
           />
           <ScrollView contentContainerStyle={styles.toDos}>
             {/* toDos가 배열이었다면, toDos.map(toDo => <ToDo />) 식으로 넘김 */}
-            {Object.values(toDos).map(toDo => (
-              <ToDo
-                key={toDo.id}
-                {...toDo}
-                deleteToDo={this._deleteToDo}
-                uncompleteToDo={this._uncompleteToDo}
-                completeToDo={this._completeToDo}
-              />
-            ))}
+            {Object.values(toDos)
+              .sort((a, b) => {
+                return a.id < b.id;
+              })
+              .map(toDo => (
+                <ToDo
+                  key={toDo.id}
+                  {...toDo}
+                  deleteToDo={this._deleteToDo}
+                  uncompleteToDo={this._uncompleteToDo}
+                  completeToDo={this._completeToDo}
+                />
+              ))}
           </ScrollView>
         </View>
       </View>
